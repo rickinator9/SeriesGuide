@@ -79,7 +79,7 @@ public class ProviderTest {
             SgApp.CONTENT_AUTHORITY).build();
 
     @Test
-    public void showDefaultValues() throws Exception {
+    public void showDefaultValues() throws RemoteException, OperationApplicationException {
         Context context = InstrumentationRegistry.getTargetContext();
 
         ContentValues values = SHOW.toContentValues(context, true);
@@ -127,14 +127,14 @@ public class ProviderTest {
     }
 
     @Test
-    public void seasonDefaultValues() throws Exception {
+    public void seasonDefaultValues() throws RemoteException, OperationApplicationException {
         ContentProviderOperation op = DBUtils
                 .buildSeasonOp(SHOW.tvdb_id, SEASON.tvdbId, SEASON.season, true);
         insertAndAssertSeason(op);
     }
 
     @Test
-    public void seasonDefaultValuesImport() throws Exception {
+    public void seasonDefaultValuesImport() throws RemoteException, OperationApplicationException {
         ContentValues values = SEASON.toContentValues(SHOW.tvdb_id);
 
         ContentProviderOperation op = ContentProviderOperation.newInsert(Seasons.CONTENT_URI)
@@ -169,7 +169,7 @@ public class ProviderTest {
     }
 
     @Test
-    public void episodeDefaultValues() throws Exception {
+    public void episodeDefaultValues() throws RemoteException, OperationApplicationException {
         ContentValues values = new ContentValues();
         TvdbEpisodeTools.toContentValues(EPISODE, values,
                 EPISODE.id, 1234, SHOW.tvdb_id, 0,
@@ -179,13 +179,13 @@ public class ProviderTest {
     }
 
     @Test
-    public void episodeDefaultValuesImport() throws Exception {
+    public void episodeDefaultValuesImport() throws RemoteException, OperationApplicationException {
         ContentValues values = EPISODE_I.toContentValues(SHOW.tvdb_id, 1234, 0);
 
         insertAndAssertEpisode(values);
     }
 
-    private void insertAndAssertEpisode(ContentValues values) throws Exception {
+    private void insertAndAssertEpisode(ContentValues values) throws RemoteException, OperationApplicationException{
         ContentProviderOperation op = ContentProviderOperation.newInsert(Episodes.CONTENT_URI)
                 .withValues(values).build();
 
@@ -215,7 +215,7 @@ public class ProviderTest {
     }
 
     @Test
-    public void listDefaultValues() throws Exception {
+    public void listDefaultValues() {
         AddListTask addListTask = new AddListTask(InstrumentationRegistry.getTargetContext(),
                 LIST.name);
         addListTask.doDatabaseUpdate(providerRule.getResolver(), addListTask.getListId());
@@ -232,7 +232,7 @@ public class ProviderTest {
     }
 
     @Test
-    public void listDefaultValuesImport() throws Exception {
+    public void listDefaultValuesImport() throws RemoteException, OperationApplicationException {
         ContentValues values = LIST.toContentValues();
 
         ContentProviderOperation op = ContentProviderOperation.newInsert(Lists.CONTENT_URI)
@@ -254,7 +254,7 @@ public class ProviderTest {
     }
 
     @Test
-    public void movieDefaultValues() throws Exception {
+    public void movieDefaultValues() {
         ContentValues values = MOVIE.toContentValuesInsert();
         providerRule.getResolver().insert(Movies.CONTENT_URI, values);
 
@@ -262,14 +262,14 @@ public class ProviderTest {
     }
 
     @Test
-    public void movieDefaultValuesWatchedShell() throws Exception {
+    public void movieDefaultValuesWatchedShell() {
         MovieTools.addMovieWatchedShell(providerRule.getResolver(), MOVIE.tmdbMovie().id);
 
         assertMovie(true);
     }
 
     @Test
-    public void movieDefaultValuesImport() throws Exception {
+    public void movieDefaultValuesImport() {
         providerRule.getResolver().insert(Movies.CONTENT_URI, MOVIE_I.toContentValues());
 
         assertMovie(false);

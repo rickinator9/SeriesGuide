@@ -26,8 +26,6 @@ public abstract class BaseNetworkJob implements NetworkJob {
         String error;
         boolean removeJob;
         switch (result) {
-            case NetworkJob.SUCCESS:
-                return new JobResult(true, true);
             case NetworkJob.ERROR_CONNECTION:
             case NetworkJob.ERROR_HEXAGON_SERVER:
             case NetworkJob.ERROR_TRAKT_SERVER:
@@ -57,6 +55,7 @@ public abstract class BaseNetworkJob implements NetworkJob {
                 error = context.getString(R.string.trakt_notice_not_exists);
                 removeJob = true;
                 break;
+            case NetworkJob.SUCCESS:
             default:
                 return new JobResult(true, true);
         }

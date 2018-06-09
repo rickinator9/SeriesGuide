@@ -47,7 +47,7 @@ public class ShowsActivityTest {
             ShowsActivity.class);
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // delete the database and close the database helper inside the provider
         // to ensure a clean state for the add show test
         Context context = InstrumentationRegistry.getTargetContext();
@@ -57,15 +57,11 @@ public class ShowsActivityTest {
     }
 
     @Test
-    public void testAddShowAndSetWatchedThenReturn() {
+    public void testAddShowAndSetWatchedThenReturn() throws InterruptedException {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(5000);
 
         ViewInteraction floatingActionButton = onView(
                 allOf(withId(R.id.buttonShowsAdd), withContentDescription("Add show"),
@@ -81,11 +77,7 @@ public class ShowsActivityTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(700);
 
         ViewInteraction recyclerView = onView(
                 allOf(withId(R.id.recyclerViewShowsDiscover),
@@ -114,11 +106,7 @@ public class ShowsActivityTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(1000);
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.buttonEpisodeWatched), withText("Set watched"),
@@ -134,22 +122,14 @@ public class ShowsActivityTest {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(200);
 
         pressBack();
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Thread.sleep(700);
 
         pressBack();
     }

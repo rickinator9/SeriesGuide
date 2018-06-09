@@ -375,17 +375,18 @@ public class TvdbTools {
             }
         }
 
+        String lang = language;
         // if no language is given, try to get the language stored on hexagon
-        if (language == null && hexagonShow != null) {
-            language = hexagonShow.getLanguage();
+        if (lang == null && hexagonShow != null) {
+            lang = hexagonShow.getLanguage();
         }
         // if we still have no language, use the users default language
-        if (TextUtils.isEmpty(language)) {
-            language = DisplaySettings.getShowsLanguage(context);
+        if (TextUtils.isEmpty(lang)) {
+            lang = DisplaySettings.getShowsLanguage(context);
         }
 
         // get show info from TVDb and trakt
-        Show show = getShowDetails(showTvdbId, language);
+        Show show = getShowDetails(showTvdbId, lang);
 
         if (hexagonShow != null) {
             // restore properties from hexagon

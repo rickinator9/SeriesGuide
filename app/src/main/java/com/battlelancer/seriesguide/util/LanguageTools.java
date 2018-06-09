@@ -21,12 +21,13 @@ public class LanguageTools {
      * <p>If the given language code is {@code null}, uses {@link DisplaySettings#getShowsLanguage(Context)}.
      */
     public static String getShowLanguageStringFor(Context context, @Nullable String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) {
+        String langCode = languageCode;
+        if (TextUtils.isEmpty(langCode)) {
             // fall back to default language
-            languageCode = DisplaySettings.getShowsLanguage(context);
+            langCode = DisplaySettings.getShowsLanguage(context);
         }
 
-        return getLanguageStringFor(context, languageCode, R.array.languageCodesShows);
+        return getLanguageStringFor(context, langCode, R.array.languageCodesShows);
     }
 
     /**
@@ -75,16 +76,17 @@ public class LanguageTools {
     @Nullable
     public static LanguageData getShowLanguageDataFor(Context context,
             @Nullable String languageCode) {
-        if (TextUtils.isEmpty(languageCode)) {
+        String langCode = languageCode;
+        if (TextUtils.isEmpty(langCode)) {
             // fall back to default language
-            languageCode = DisplaySettings.getShowsLanguage(context);
+            langCode = DisplaySettings.getShowsLanguage(context);
         }
 
         String[] languageCodes = context.getResources().getStringArray(R.array.languageCodesShows);
         for (int i = 0; i < languageCodes.length; i++) {
-            if (languageCodes[i].equals(languageCode)) {
-                String languageName = new Locale(languageCode, "").getDisplayName();
-                return new LanguageData(languageCode, languageName);
+            if (languageCodes[i].equals(langCode)) {
+                String languageName = new Locale(langCode, "").getDisplayName();
+                return new LanguageData(langCode, languageName);
             }
         }
 

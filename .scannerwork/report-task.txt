@@ -1,0 +1,5 @@
+projectKey=com.battlelancer:seriesguide
+serverUrl=http://localhost:9000
+dashboardUrl=http://localhost:9000/dashboard/index/com.battlelancer:seriesguide
+ceTaskId=AWPAtVvk3EHYFS83Fivt
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWPAtVvk3EHYFS83Fivt
