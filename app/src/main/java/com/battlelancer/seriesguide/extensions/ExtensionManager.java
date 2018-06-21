@@ -198,6 +198,7 @@ public class ExtensionManager {
                 extensionsToKeep.add(extension);
             } catch (PackageManager.NameNotFoundException e) {
                 Timber.i("Extension %s no longer available: removed", extension.toShortString());
+                Timber.i(e);
             }
         }
 

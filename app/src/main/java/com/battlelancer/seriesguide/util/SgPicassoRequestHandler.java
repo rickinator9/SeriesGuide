@@ -18,6 +18,7 @@ import com.uwetrottmann.thetvdb.entities.SeriesImageQueryResultResponse;
 import com.uwetrottmann.tmdb2.entities.Movie;
 import java.io.IOException;
 import java.io.InputStream;
+import timber.log.Timber;
 
 /**
  * This is mostly a copy of {@link com.squareup.picasso.NetworkRequestHandler} that is not visible.
@@ -71,7 +72,8 @@ public class SgPicassoRequestHandler extends RequestHandler {
                         return loadFromNetwork(Uri.parse(imageUrl), networkPolicy);
                     }
                 }
-            } catch (TvdbException ignored) {
+            } catch (TvdbException e) {
+                Timber.i(e);
             }
         }
 

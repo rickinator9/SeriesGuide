@@ -137,7 +137,7 @@ public class AddShowDialogFragment extends AppCompatDialogFragment {
         try {
             addShowListener = (OnAddShowListener) context;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + " must implement OnAddShowListener");
+            throw new IllegalArgumentException(context.toString() + " must implement OnAddShowListener");
         }
     }
 

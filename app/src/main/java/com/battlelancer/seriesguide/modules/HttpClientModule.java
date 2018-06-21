@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import timber.log.Timber;
 
 @Module
 public class HttpClientModule {
@@ -78,7 +79,8 @@ public class HttpClientModule {
             }
             // Target 2% of the total space.
             size = available / 50;
-        } catch (IllegalArgumentException ignored) {
+        } catch (IllegalArgumentException e) {
+            Timber.i(e);
         }
 
         // Bound inside min/max size for disk cache.

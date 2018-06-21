@@ -67,6 +67,7 @@ public class Security {
      *
      * @param encodedPublicKey Base64-encoded public key
      * @throws IllegalArgumentException if encodedPublicKey is invalid
+     * @throws IllegalStateException if no algorithm was found.
      */
     public static PublicKey generatePublicKey(String encodedPublicKey) {
         try {
@@ -74,7 +75,7 @@ public class Security {
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_FACTORY_ALGORITHM);
             return keyFactory.generatePublic(new X509EncodedKeySpec(decodedKey));
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         } catch (InvalidKeySpecException e) {
             Timber.e("Invalid key specification.");
             throw new IllegalArgumentException(e);

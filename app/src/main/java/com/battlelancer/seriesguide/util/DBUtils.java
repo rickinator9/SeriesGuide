@@ -698,7 +698,7 @@ public class DBUtils {
                     .applyBatch(SgApp.CONTENT_AUTHORITY, batch);
         } catch (RemoteException e) {
             // not using a remote provider, so this should never happen. crash if it does.
-            throw new RuntimeException("Problem applying batch operation", e);
+            throw new IllegalStateException("Problem applying batch operation", e);
         } catch (SQLiteException e) {
             Timber.e(e, "applyBatch: failed, database error.");
             postDatabaseError(e);

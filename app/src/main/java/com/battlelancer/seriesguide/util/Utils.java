@@ -57,6 +57,7 @@ public class Utils {
             version = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0).versionName;
         } catch (NameNotFoundException e) {
+            Timber.i(e);
             version = "UnknownVersion";
         }
         return version;
@@ -124,6 +125,7 @@ public class Utils {
                 return true;
             }
         } catch (NameNotFoundException e) {
+            Timber.i(e);
             // Expected exception that occurs if the package is not present.
         }
 
@@ -326,7 +328,8 @@ public class Utils {
             try {
                 fragment.startActivityForResult(intent, requestCode);
                 handled = true;
-            } catch (ActivityNotFoundException ignored) {
+            } catch (ActivityNotFoundException e) {
+                Timber.i(e);
                 // catch failure to handle explicit intents
             }
         }

@@ -731,7 +731,7 @@ public class IabHelper {
         } else {
             logError("Unexpected type for bundle response code.");
             logError(o.getClass().getName());
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "Unexpected type for bundle response code: " + o.getClass().getName());
         }
     }
@@ -749,7 +749,7 @@ public class IabHelper {
         } else {
             logError("Unexpected type for intent response code.");
             logError(o.getClass().getName());
-            throw new RuntimeException(
+            throw new IllegalArgumentException(
                     "Unexpected type for intent response code: " + o.getClass().getName());
         }
     }

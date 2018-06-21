@@ -82,7 +82,8 @@ public class TimeTools {
         if (timezone != null && timezone.length() != 0) {
             try {
                 return ZoneId.of(timezone);
-            } catch (DateTimeException ignored) {
+            } catch (DateTimeException e) {
+                Timber.i(e);
             }
         }
 

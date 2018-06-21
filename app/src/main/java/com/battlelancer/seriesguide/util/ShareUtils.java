@@ -13,6 +13,7 @@ import android.text.format.DateUtils;
 import android.widget.Toast;
 import com.battlelancer.seriesguide.R;
 import com.battlelancer.seriesguide.thetvdbapi.TvdbLinks;
+import timber.log.Timber;
 
 /**
  * Contains helpers to share a show, episode (share intent, calendar event) or movie.
@@ -55,6 +56,7 @@ public class ShareUtils {
             ib.startChooser();
         } catch (ActivityNotFoundException e) {
             // no activity available to handle the intent
+            Timber.i(e);
             Toast.makeText(activity, R.string.app_not_available, Toast.LENGTH_LONG).show();
         }
     }

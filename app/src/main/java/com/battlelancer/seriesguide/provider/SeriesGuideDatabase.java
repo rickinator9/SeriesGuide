@@ -561,9 +561,12 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
 
     private final Context context;
 
+    private static Context globalContext;
+
     public SeriesGuideDatabase(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
+        this.globalContext = context;
     }
 
     @Override
@@ -605,58 +608,83 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
         int version = oldVersion;
         switch (version) {
             case 16:
-                upgradeToSeventeen(db);
+                version = upgradeToSeventeen(db);
+                break;
             case DBVER_17_FAVORITES:
-                upgradeToEighteen(db);
+                version = upgradeToEighteen(db);
+                break;
             case DBVER_18_NEXTAIRDATETEXT:
-                upgradeToNineteen(db);
+                version = upgradeToNineteen(db);
+                break;
             case DBVER_19_SETOTALCOUNT:
-                upgradeToTwenty(db);
+                version = upgradeToTwenty(db);
+                break;
             case DBVER_20_SYNC:
-                upgradeToTwentyOne(db);
+                version = upgradeToTwentyOne(db);
+                break;
             case DBVER_21_AIRTIMECOLUMN:
-                upgradeToTwentyTwo(db);
+                version = upgradeToTwentyTwo(db);
+                break;
             case DBVER_22_PERSHOWUPDATEDATE:
-                upgradeToTwentyThree(db);
+                version = upgradeToTwentyThree(db);
+                break;
             case DBVER_23_HIDDENSHOWS:
-                upgradeToTwentyFour(db);
+                version = upgradeToTwentyFour(db);
+                break;
             case DBVER_24_AIRTIMEREFORM:
-                upgradeToTwentyFive(db);
+                version = upgradeToTwentyFive(db);
+                break;
             case DBVER_25_NEXTAIRDATEMS:
-                upgradeToTwentySix(db);
+                version = upgradeToTwentySix(db);
+                break;
             case DBVER_26_COLLECTED:
-                upgradeToTwentySeven(db);
+                version = upgradeToTwentySeven(db);
+                break;
             case DBVER_27_IMDBIDSLASTEDIT:
-                upgradeToTwentyEight(db);
+                version = upgradeToTwentyEight(db);
+                break;
             case DBVER_28_LISTS:
                 // GetGlue column not required any longer
+                break;
             case DBVER_29_GETGLUE_CHECKIN_FIX:
-                upgradeToThirty(db);
+                version = upgradeToThirty(db);
+                break;
             case DBVER_30_ABSOLUTE_NUMBERS:
-                upgradeToThirtyOne(db);
+                version = upgradeToThirtyOne(db);
+                break;
             case DBVER_31_LAST_WATCHED_ID:
-                upgradeToThirtyTwo(db);
+                version = upgradeToThirtyTwo(db);
+                break;
             case DBVER_32_MOVIES:
-                upgradeToThirtyThree(db);
+                version = upgradeToThirtyThree(db);
+                break;
             case DBVER_33_IGNORE_ARTICLE_SORT:
-                upgradeToThirtyFour(db);
+                version = upgradeToThirtyFour(db);
+                break;
             case DBVER_34_TRAKT_V2:
-                upgradeToThirtyFive(db);
+                version = upgradeToThirtyFive(db);
+                break;
             case DBVER_35_ACTIVITY_TABLE:
-                upgradeToThirtySix(db);
+                version = upgradeToThirtySix(db);
+                break;
             case DBVER_36_ORDERABLE_LISTS:
-                upgradeToThirtySeven(db);
+                version = upgradeToThirtySeven(db);
+                break;
             case DBVER_37_LANGUAGE_PER_SERIES:
-                upgradeToThirtyEight(db);
+                version = upgradeToThirtyEight(db);
+                break;
             case DBVER_38_SHOW_TRAKT_ID:
-                upgradeToThirtyNine(db);
+                version = upgradeToThirtyNine(db);
+                break;
             case DBVER_39_SHOW_LAST_WATCHED:
-                upgradeToForty(db, context);
+                version = upgradeToForty(db, context);
+                break;
             case DBVER_40_NOTIFY_PER_SHOW:
-                upgradeToFortyOne(db);
+                version = upgradeToFortyOne(db);
+                break;
             case DBVER_41_EPISODE_LAST_UPDATED:
-                upgradeToFortyTwo(db);
-                version = DBVER_42_JOBS;
+                version = upgradeToFortyTwo(db);
+                break;
         }
 
         // drop all tables if version is not right
@@ -688,26 +716,30 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
     /**
      * See {@link #DBVER_42_JOBS}.
      */
-    private void upgradeToFortyTwo(SQLiteDatabase db) {
+    private static int upgradeToFortyTwo(SQLiteDatabase db) {
         if (!isTableExisting(db, Tables.JOBS)) {
             db.execSQL(CREATE_JOBS_TABLE);
         }
+
+        return DBVER_41_EPISODE_LAST_UPDATED;
     }
 
     /**
      * See {@link #DBVER_41_EPISODE_LAST_UPDATED}.
      */
-    private static void upgradeToFortyOne(SQLiteDatabase db) {
+    private static int upgradeToFortyOne(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.EPISODES, Episodes.LAST_UPDATED)) {
             db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN "
                     + Episodes.LAST_UPDATED + " INTEGER DEFAULT 0;");
         }
+
+        return upgradeToFortyTwo(db);
     }
 
     /**
      * See {@link #DBVER_40_NOTIFY_PER_SHOW}.
      */
-    private static void upgradeToForty(SQLiteDatabase db, Context context) {
+    private static int upgradeToForty(SQLiteDatabase db, Context context) {
         if (isTableColumnMissing(db, Tables.SHOWS, Shows.NOTIFY)) {
             db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN "
                     + Shows.NOTIFY + " INTEGER DEFAULT 1;");
@@ -722,12 +754,14 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
                 db.update(Tables.SHOWS, values, Shows.SELECTION_NOT_FAVORITES, null);
             }
         }
+
+        return upgradeToFortyOne(db);
     }
 
     /**
      * See {@link #DBVER_39_SHOW_LAST_WATCHED}.
      */
-    private static void upgradeToThirtyNine(SQLiteDatabase db) {
+    private static int upgradeToThirtyNine(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.SHOWS, Shows.LASTWATCHED_MS)) {
             db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN "
                     + Shows.LASTWATCHED_MS + " INTEGER DEFAULT 0;");
@@ -737,51 +771,61 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
                     + Shows.UNWATCHED_COUNT + " INTEGER DEFAULT " + DBUtils.UNKNOWN_UNWATCHED_COUNT
                     + ";");
         }
+
+        return upgradeToForty(db, globalContext);
     }
 
     /**
      * See {@link #DBVER_38_SHOW_TRAKT_ID}.
      */
-    private static void upgradeToThirtyEight(SQLiteDatabase db) {
+    private static int upgradeToThirtyEight(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.SHOWS, Shows.TRAKT_ID)) {
             db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN "
                     + Shows.TRAKT_ID + " INTEGER DEFAULT 0;");
         }
+
+        return upgradeToThirtyNine(db);
     }
 
     /**
      * See {@link #DBVER_37_LANGUAGE_PER_SERIES}.
      */
-    private static void upgradeToThirtySeven(SQLiteDatabase db) {
+    private static int upgradeToThirtySeven(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.SHOWS, Shows.LANGUAGE)) {
             db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN "
                     + Shows.LANGUAGE + " TEXT DEFAULT '';");
         }
+
+        return upgradeToThirtyEight(db);
     }
 
     /**
      * See {@link #DBVER_36_ORDERABLE_LISTS}.
      */
-    private static void upgradeToThirtySix(SQLiteDatabase db) {
+    private static int upgradeToThirtySix(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.LISTS, Lists.ORDER)) {
             db.execSQL("ALTER TABLE " + Tables.LISTS + " ADD COLUMN "
                     + Lists.ORDER + " INTEGER DEFAULT 0;");
         }
+
+        return upgradeToThirtySeven(db);
     }
 
     /**
      * See {@link #DBVER_35_ACTIVITY_TABLE}.
      */
-    private static void upgradeToThirtyFive(SQLiteDatabase db) {
+    private static int upgradeToThirtyFive(SQLiteDatabase db) {
         if (!isTableExisting(db, Tables.ACTIVITY)) {
             db.execSQL(CREATE_ACTIVITY_TABLE);
         }
+
+        return upgradeToThirtySix(db);
     }
 
     /**
      * See {@link #DBVER_34_TRAKT_V2}.
      */
-    private static void upgradeToThirtyFour(SQLiteDatabase db) {
+    private static int upgradeToThirtyFour(SQLiteDatabase db) {
         // add new columns
         db.beginTransaction();
         try {
@@ -858,12 +902,14 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
             db.endTransaction();
             query.close();
         }
+
+        return upgradeToThirtyFive(db);
     }
 
     /**
      * Add shows and movies title column without articles.
      */
-    private static void upgradeToThirtyThree(SQLiteDatabase db) {
+    private static int upgradeToThirtyThree(SQLiteDatabase db) {
         /*
         Add new columns. Added existence checks as 14.0.3 update botched upgrade process.
          */
@@ -920,15 +966,19 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
             }
             movies.close();
         }
+
+        return upgradeToThirtyFour(db);
     }
 
     /**
      * Add movies table.
      */
-    private static void upgradeToThirtyTwo(SQLiteDatabase db) {
+    private static int upgradeToThirtyTwo(SQLiteDatabase db) {
         if (!isTableExisting(db, Tables.MOVIES)) {
             db.execSQL(CREATE_MOVIES_TABLE);
         }
+
+        return upgradeToThirtyThree(db);
     }
 
     // Must be watched and have an airdate
@@ -945,7 +995,7 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
      * Add {@link Shows} column to store the last watched episode id for better prediction of next
      * episode.
      */
-    private static void upgradeToThirtyOne(SQLiteDatabase db) {
+    private static int upgradeToThirtyOne(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.SHOWS, Shows.LASTWATCHEDID)) {
             db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + Shows.LASTWATCHEDID
                     + " INTEGER DEFAULT 0;");
@@ -987,63 +1037,75 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
 
             shows.close();
         }
+
+        return upgradeToThirtyTwo(db);
     }
 
     /**
      * Add {@link Episodes} column to store absolute episode number.
      */
-    private static void upgradeToThirty(SQLiteDatabase db) {
+    private static int upgradeToThirty(SQLiteDatabase db) {
         if (isTableColumnMissing(db, Tables.EPISODES, Episodes.ABSOLUTE_NUMBER)) {
             db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN "
                     + Episodes.ABSOLUTE_NUMBER + " INTEGER;");
         }
+
+        return upgradeToThirtyOne(db);
     }
 
     /**
      * Add tables to store lists and list items.
      */
-    private static void upgradeToTwentyEight(SQLiteDatabase db) {
+    private static int upgradeToTwentyEight(SQLiteDatabase db) {
         db.execSQL(CREATE_LISTS_TABLE);
 
         db.execSQL(CREATE_LIST_ITEMS_TABLE);
+
+        return upgradeToThirty(db);
     }
 
     /**
      * Add {@link Episodes} columns for storing its IMDb id and last time of edit on theTVDB.com.
      * Add {@link Shows} column for storing last time of edit as well.
      */
-    private static void upgradeToTwentySeven(SQLiteDatabase db) {
+    private static int upgradeToTwentySeven(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.LASTEDIT
                 + " INTEGER DEFAULT 0;");
         db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN " + EpisodesColumns.IMDBID
                 + " TEXT DEFAULT '';");
         db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN " + EpisodesColumns.LAST_EDITED
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwentyEight(db);
     }
 
     /**
      * Add a {@link Episodes} column for storing whether an episode was collected in digital or
      * physical form.
      */
-    private static void upgradeToTwentySix(SQLiteDatabase db) {
+    private static int upgradeToTwentySix(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN " + EpisodesColumns.COLLECTED
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwentySeven(db);
     }
 
     /**
      * Add a {@link Shows} column for storing the next air date in ms as integer data type rather
      * than as text.
      */
-    private static void upgradeToTwentyFive(SQLiteDatabase db) {
+    private static int upgradeToTwentyFive(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.NEXTAIRDATEMS
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwentySix(db);
     }
 
     /**
      * Adds a column to the {@link Tables#EPISODES} table to store the airdate and possibly time in
      * milliseconds.
      */
-    private static void upgradeToTwentyFour(SQLiteDatabase db) {
+    private static int upgradeToTwentyFour(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.EPISODES + " ADD COLUMN " + EpisodesColumns.FIRSTAIREDMS
                 + " INTEGER DEFAULT -1;");
 
@@ -1089,15 +1151,19 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
         }
 
         shows.close();
+
+        return upgradeToTwentyFive(db);
     }
 
     /**
      * Adds a column to the {@link Tables#SHOWS} table similar to the favorite boolean, but to allow
      * hiding shows.
      */
-    private static void upgradeToTwentyThree(SQLiteDatabase db) {
+    private static int upgradeToTwentyThree(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.HIDDEN
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwentyFour(db);
     }
 
     /**
@@ -1105,34 +1171,42 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
      * over which shows should get updated. This is in conjunction with a 7 day limit when a show
      * will get updated regardless if it has been marked as updated or not.
      */
-    private static void upgradeToTwentyTwo(SQLiteDatabase db) {
+    private static int upgradeToTwentyTwo(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.LASTUPDATED
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwentyThree(db);
     }
 
-    private static void upgradeToTwentyOne(SQLiteDatabase db) {
+    private static int upgradeToTwentyOne(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.RELEASE_COUNTRY
                 + " TEXT DEFAULT '';");
+
+        return upgradeToTwentyTwo(db);
     }
 
-    private static void upgradeToTwenty(SQLiteDatabase db) {
+    private static int upgradeToTwenty(SQLiteDatabase db) {
         db.execSQL(
                 "ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.HEXAGON_MERGE_COMPLETE
                         + " INTEGER DEFAULT 1;");
+
+        return upgradeToTwentyOne(db);
     }
 
     /**
      * In version 19 the season integer column totalcount was added.
      */
-    private static void upgradeToNineteen(SQLiteDatabase db) {
+    private static int upgradeToNineteen(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SEASONS + " ADD COLUMN " + SeasonsColumns.TOTALCOUNT
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToTwenty(db);
     }
 
     /**
      * In version 18 the series text column nextairdatetext was added.
      */
-    private static void upgradeToEighteen(SQLiteDatabase db) {
+    private static int upgradeToEighteen(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.NEXTAIRDATETEXT
                 + " TEXT DEFAULT '';");
 
@@ -1166,14 +1240,18 @@ public class SeriesGuideDatabase extends SQLiteOpenHelper {
         }
 
         shows.close();
+
+        return upgradeToNineteen(db);
     }
 
     /**
      * In version 17 the series boolean column favorite was added.
      */
-    private static void upgradeToSeventeen(SQLiteDatabase db) {
+    private static int upgradeToSeventeen(SQLiteDatabase db) {
         db.execSQL("ALTER TABLE " + Tables.SHOWS + " ADD COLUMN " + ShowsColumns.FAVORITE
                 + " INTEGER DEFAULT 0;");
+
+        return upgradeToEighteen(db);
     }
 
     /**

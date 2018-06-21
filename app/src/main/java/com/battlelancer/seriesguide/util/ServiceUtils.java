@@ -15,6 +15,7 @@ import com.battlelancer.seriesguide.R;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
+import timber.log.Timber;
 
 /**
  * Helper methods to interact with third-party services trakt and The Movie Database used within
@@ -136,7 +137,8 @@ public final class ServiceUtils {
         try {
             pm.getPackageInfo(YOUTUBE_PACKAGE, PackageManager.GET_ACTIVITIES);
             hasYouTube = true;
-        } catch (PackageManager.NameNotFoundException notInstalled) {
+        } catch (PackageManager.NameNotFoundException e) {
+            Timber.i(e);
             hasYouTube = false;
         }
 

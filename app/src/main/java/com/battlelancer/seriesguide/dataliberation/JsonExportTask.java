@@ -266,6 +266,7 @@ public class JsonExportTask extends AsyncTask<Void, Integer, Integer> {
                     writeJsonStreamMovies(out, data);
                 }
 
+                out.close();
                 // let the document provider know we're done.
                 pfd.close();
             } else {
