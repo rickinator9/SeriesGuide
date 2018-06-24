@@ -315,6 +315,8 @@ public class AmazonIapManager {
             PurchasingService.notifyFulfillment(receipt.getReceiptId(),
                     FulfillmentResult.FULFILLED);
         } catch (final Exception e) {
+            Timber.i(e);
+
             // If for any reason the app is not able to fulfill the purchase,
             // add your own error handling code here.
             Timber.e("Failed to grant purchase, with error %s", e.getMessage());

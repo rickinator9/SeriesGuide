@@ -39,6 +39,7 @@ import com.uwetrottmann.androidutils.AndroidUtils;
 import java.util.Date;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
+import timber.log.Timber;
 
 /**
  * A {@link DialogFragment} allowing the user to decide whether to add a show to SeriesGuide.
@@ -137,6 +138,8 @@ public class AddShowDialogFragment extends AppCompatDialogFragment {
         try {
             addShowListener = (OnAddShowListener) context;
         } catch (ClassCastException e) {
+            Timber.i(e);
+
             throw new IllegalArgumentException(context.toString() + " must implement OnAddShowListener");
         }
     }
