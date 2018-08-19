@@ -17,9 +17,9 @@ public class AccountUtils {
 
     public static final int SYNC_FREQUENCY = 24 * 60 * 60; // 1 day (in seconds)
 
-    private static final String ACCOUNT_NAME = "SeriesGuide Sync";
+    public static final String ACCOUNT_NAME = "SeriesGuide Sync";
 
-    private static final String ACCOUNT_TYPE = BuildConfig.APPLICATION_ID;
+    public static final String ACCOUNT_TYPE = BuildConfig.APPLICATION_ID;
 
     public static void createAccount(Context context) {
         Timber.d("Setting up account...");
@@ -76,12 +76,20 @@ public class AccountUtils {
 
     public static boolean isAccountExists(Context context) {
         AccountManager manager = AccountManager.get(context);
+        return isAccountExists(manager);
+    }
+
+    public static boolean isAccountExists(AccountManager manager) {
         Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
         return accounts.length > 0;
     }
 
     public static Account getAccount(Context context) {
         AccountManager manager = AccountManager.get(context);
+        return getAccount(manager);
+    }
+
+    public static Account getAccount(AccountManager manager) {
         Account[] accounts = manager.getAccountsByType(ACCOUNT_TYPE);
 
         // return first available account

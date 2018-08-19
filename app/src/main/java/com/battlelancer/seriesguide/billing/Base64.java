@@ -157,7 +157,7 @@ public class Base64 {
      * @since 1.3
      * @throws Base64DecoderException
      */
-    public static byte[] decode(byte[] source, int off, int len)
+    private static byte[] decode(byte[] source, int off, int len)
             throws Base64DecoderException {
         return decode(source, off, len, DECODABET);
     }
@@ -172,7 +172,7 @@ public class Base64 {
      * @param decodabet the decodabet for decoding Base64 content
      * @return decoded data
      */
-    public static byte[] decode(byte[] source, int off, int len, byte[] decodabet)
+    private static byte[] decode(byte[] source, int off, int len, byte[] decodabet)
             throws Base64DecoderException {
         int len34 = len * 3 / 4;
         byte[] outBuff = new byte[2 + len34]; // Upper limit on size of output

@@ -20,5 +20,4 @@ public class SeasonTools {
             return context.getString(R.string.season_number, seasonNumber);
         }
     }
-
 }
