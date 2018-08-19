@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
-apply plugin: 'signing'
+//apply plugin: 'signing'
 apply plugin: 'io.codearte.nexus-staging'
 
 group = "com.uwetrottmann.seriesguide"
@@ -69,9 +69,9 @@ artifacts {
     archives javadocJar
 }
 
-signing {
-    sign configurations.archives
-}
+//signing {
+//    sign configurations.archives
+//}
 
 uploadArchives {
     repositories {
